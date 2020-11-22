@@ -1,26 +1,33 @@
 # INDEX.md
 
-- The idea: project boilerplate - index.html
-	- no fluff
-	- minimal dark theme, otherwise default browser style
-	- renders ./README.md to HTML
+- The idea: project boilerplate - `index.html`
+	- No fluff - minimal but not minifed
+	- [Dark theme](https://gist.github.com/VSharapov/1405184e3e4005425e9ab0750c2060fe), otherwise default browser style
+	- Renders `./README.md` to HTML
+
+## How to add this to your repo:
+
+Just save [this `.html` file](https://raw.githubusercontent.com/VSharapov/INDEXmd/master/index.html) to your repo's directory
+
+---
 
 - The implamentation:
-	- Set up sample README.md from https://dillinger.io/
-	- Going to try using https://github.com/showdownjs/showdown - http://demo.showdownjs.com/
-			- https://cdn.rawgit.com/showdownjs/showdown/&lt;version tag&gt;/dist/showdown.min.js
-			- https://cdn.rawgit.com/showdownjs/showdown/1.9.1/dist/showdown.min.js
-	- Cool, it works, now minimal code to get ./README.md via XMLHttpRequest
-		- https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest
+	- Set up sample `README.md` from [https://dillinger.io/](https://dillinger.io/)
+	- Going to try using [https://github.com/showdownjs/showdown](https://github.com/showdownjs/showdown) - [http://demo.showdownjs.com/](http://demo.showdownjs.com/)
+		- `https://cdn.rawgit.com/showdownjs/showdown/<version tag>/dist/showdown.min.js`
+		- [https://cdn.rawgit.com/showdownjs/showdown/1.9.1/dist/showdown.min.js](https://cdn.rawgit.com/showdownjs/showdown/1.9.1/dist/showdown.min.js)
+	- Cool, it works, now minimal code to get `./README.md` via [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest)
 	- Beautiful! But the table doesn's work, is it standard?
-		- Not standard, easy to enable:  var converter = new showdown.Converter({'tables': true});
+		- Not standard, easy to enable: `var converter = new showdown.Converter({'tables': true});`
 	- Pruned everything
 	- Cleaned up JS
-	- Set document.title to first element contents
+	- Set `document.title` to first element contents
 	- I think it's done
 	- Replaced sample 
-		- https://github.com/markdown-it/markdown-it/blob/1ad3aec2041cd2defa7e299543cc1e42184b680d/support/demo_template/sample.md 
-	- Pruned out plugins and extensions
+		- [https://github.com/markdown-it/markdown-it/blob/1ad3aec2041cd2defa7e299543cc1e42184b680d/support/demo_template/sample.md](https://github.com/markdown-it/markdown-it/blob/1ad3aec2041cd2defa7e299543cc1e42184b680d/support/demo_template/sample.md)
+		- Pruned out plugins and extensions
+
+---
 
 # h1 Heading
 ## h2 Heading
