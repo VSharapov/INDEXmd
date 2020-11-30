@@ -11,18 +11,22 @@
     </style>
     <script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.1/dist/showdown.min.js"></script>
     <script>
-      var readme = 'README.md'
-      var converter = new showdown.Converter();
-      html      = converter.makeHtml('loading ' + 'asd' + ' ...');
+      readme = 'README.md'
+      converter = new showdown.Converter();
+      html = converter.makeHtml('loading ``' + readme + '`` ...');
 
       function reqListener () {
-        html      = converter.makeHtml(this.responseText);
+        if (this.status == 200) {
+          html = converter.makeHtml(this.responseText);
+        }else{
+          html += "Status " + this.status;
+        }
         document.getElementById('readme').innerHTML = html;
         document.title = document.getElementById('readme').children[0].innerHTML;
       }
 
       function main() {
-        var oReq = new XMLHttpRequest();
+        oReq = new XMLHttpRequest();
         oReq.addEventListener("load", reqListener);
         oReq.open("GET", readme);
         oReq.send();
