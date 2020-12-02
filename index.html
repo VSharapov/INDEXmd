@@ -16,7 +16,7 @@
       html = converter.makeHtml('loading ``' + readme + '`` ...');
 
       function reqListener () {
-        if (this.status == 200) {
+        if ((this.status >= 200 && this.status < 300) || this.status == 304)  {
           html = converter.makeHtml(this.responseText);
         }else{
           html += "Status " + this.status;
