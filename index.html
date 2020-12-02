@@ -20,6 +20,7 @@
           html = converter.makeHtml(this.responseText);
         }else{
           html += "Status " + this.status;
+          console.log(this);
         }
         document.getElementById('readme').innerHTML = html;
         document.title = document.getElementById('readme').children[0].innerHTML;
