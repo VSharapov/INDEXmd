@@ -7,6 +7,7 @@
       @media (prefers-color-scheme: dark) {
         body {background-color: black; color: white;}
         a {filter: invert(1) brightness(0.5) invert(1);}
+        select, button {filter: invert(1);}
       }
       code, pre {
         background-color: #6666;
@@ -35,7 +36,25 @@
         if(location.href.split('#').length > 1){location.href=location.href}
       }
 
+      miniMenuHTML = '<button style="float:right;" onclick="toggleMenu()">☰</button>';
+      bigMenuHTML = '<select id="theme"><option value="a">auto</option><option value="d">dark</option><option value="l">light</option></select>';
+      bigMenuHTML += '<br /><select id="text-width" style="width: 100%"><option value="f">full-width</option><option value="r">readable</option></select>';
+      bigMenuHTML += '<br /><select id="font-family" style="width: 100%"><option value="s">serif</option><option value="n">sans-serif</option><option value="m">monospace</option></select>';
+      function toggleMenu () {
+        var mDiv = document.getElementById('indexmdmenu');
+        if (mDiv.innerHTML == miniMenuHTML) {
+          mDiv.innerHTML += bigMenuHTML;
+        }else{
+          mDiv.innerHTML = miniMenuHTML;
+        }
+      }
+
+      function menuEffect() {
+        console.log('menu has changed');
+      }
+
       function main() {
+        toggleMenu();
         oReq = new XMLHttpRequest();
         oReq.addEventListener("load", reqListener);
         oReq.open("GET", readme);
@@ -44,6 +63,7 @@
     </script>
 	</head>
   <body onload="main()">
+    <div id="indexmdmenu" style="float:right; max-width: 30vw; border: dotted" onchange="menuEffect()"></div>
     <div id="readme"></div>
 	</body>
 </html>
