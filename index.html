@@ -20,6 +20,9 @@
       a {filter: invert(1) brightness(0.5) invert(1);}
       select, button {filter: invert(1);}
     </style>
+    <style type="text/css" media="(prefers-color-scheme: never)">
+      body {background-color: red;}
+    </style>
     <script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.1/dist/showdown.min.js"></script>
     <script>
       readme = 'README.md'
@@ -38,9 +41,12 @@
         if(location.href.split('#').length > 1){location.href=location.href}
       }
 
-      cssAlways = document.styleSheets[0].media;
-      cssLight = document.styleSheets[1].media;
-      cssDark = document.styleSheets[2].media;
+      cssAlwaysMedia = document.styleSheets[0].media;
+      cssLightMedia = document.styleSheets[1].media;
+      cssDarkMedia = document.styleSheets[2].media;
+      cssNeverMedia = document.styleSheets[3].media;
+      cssLight = document.styleSheets[1];
+      cssDark = document.styleSheets[2];
 
       miniMenuHTML = '<button style="float:right;" onclick="toggleMenu()">☰</button>';
       bigMenuHTML = '<select id="theme"><option value="a">auto</option><option value="d">dark</option><option value="l">light</option></select>';
@@ -56,7 +62,20 @@
       }
 
       function menuEffect() {
-        console.log('menu has changed');
+        theme = document.getElementById('theme').selectedOptions[0].innerText;
+        switch (theme) {
+          case 'dark':
+            cssDark.media = cssAlwaysMedia;
+            cssLight.media = cssNeverMedia;
+            break;
+          case 'light':
+            cssDark.media = cssNeverMedia;
+            cssLight.media = cssAlwaysMedia;
+            break;
+          default:
+            cssDark.media = cssDarkMedia;
+            cssLight.media = cssLightMedia;
+        }
       }
 
       function main() {
