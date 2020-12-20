@@ -4,11 +4,6 @@
     <title></title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <style type="text/css">
-      @media (prefers-color-scheme: dark) {
-        body {background-color: black; color: white;}
-        a {filter: invert(1) brightness(0.5) invert(1);}
-        select, button {filter: invert(1);}
-      }
       code, pre {
         background-color: #6666;
         padding: 2px;
@@ -17,6 +12,13 @@
         background-color: #0000;
         padding: 0px;
       }
+    </style>
+    <style type="text/css" media="(prefers-color-scheme: light)">
+    </style>
+    <style type="text/css" media="(prefers-color-scheme: dark)">
+      body {background-color: black; color: white;}
+      a {filter: invert(1) brightness(0.5) invert(1);}
+      select, button {filter: invert(1);}
     </style>
     <script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.1/dist/showdown.min.js"></script>
     <script>
@@ -35,6 +37,10 @@
         document.title = document.getElementById('readme').children[0].innerText;
         if(location.href.split('#').length > 1){location.href=location.href}
       }
+
+      cssAlways = document.styleSheets[0].media;
+      cssLight = document.styleSheets[1].media;
+      cssDark = document.styleSheets[2].media;
 
       miniMenuHTML = '<button style="float:right;" onclick="toggleMenu()">☰</button>';
       bigMenuHTML = '<select id="theme"><option value="a">auto</option><option value="d">dark</option><option value="l">light</option></select>';
