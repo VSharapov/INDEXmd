@@ -85,8 +85,15 @@
         }
       }
       // ...then overriden by GET parameters
+      var getParams = {};
+      getPairs = location.search.substr(1).split("&");
+      for (i in getPairs) {
+        getParams[getPairs[i].split("=")[0]] = getPairs[i].split("=")[1];
+      }
       for (i in menuOptions) {
-        console.log('TODO');
+        if (getParams[i] in menuOptions[i]) {
+          selectedOptions[i] = getParams[i];
+        }
       }
 
       function toggleMenu () {
