@@ -48,14 +48,31 @@
       cssLight = document.styleSheets[1];
       cssDark = document.styleSheets[2];
 
-      miniMenuHTML = '<button style="float:right;" onclick="toggleMenu()">☰</button>';
-      bigMenuHTML = '<select id="theme"><option value="a">auto</option><option value="d">dark</option><option value="l">light</option></select>';
-      bigMenuHTML += '<br /><select id="text-width" style="width: 100%"><option value="f">full-width</option><option value="r">readable</option></select>';
-      bigMenuHTML += '<br /><select id="font-family" style="width: 100%"><option value="s">serif</option><option value="n">sans-serif</option><option value="m">monospace</option></select>';
       function toggleMenu () {
+        miniMenuHTML = '<button style="float:right;" onclick="toggleMenu()">☰</button>';
+        menuOptions = {'theme': {
+          'auto': true, // default
+          'dark': false,
+          'light': false,
+        }, 'text-width': {
+          'full-width': true,
+          'readable': false,
+        }, 'font-family': {
+          'serif': false,
+          'sans-serif': true,
+          'monospace': false,
+        }};
         var mDiv = document.getElementById('indexmdmenu');
         if (mDiv.innerHTML == miniMenuHTML) {
-          mDiv.innerHTML += bigMenuHTML;
+          bigMenuHTML = miniMenuHTML;
+          for (i in menuOptions){
+            bigMenuHTML += '<select id="' + i + '">';
+            for (j in menuOptions[i]) {
+              bigMenuHTML += '<option value="' + j + '"' + (menuOptions[i][j] ? ' selected' : '') + '>' + j + '</option>';
+            }
+            bigMenuHTML += '</select><br />';
+          }
+          mDiv.innerHTML = bigMenuHTML;
         }else{
           mDiv.innerHTML = miniMenuHTML;
         }
