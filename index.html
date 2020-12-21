@@ -93,6 +93,14 @@
             cssDark.media = cssDarkMedia;
             cssLight.media = cssLightMedia;
         }
+        textWidth = document.getElementById('text-width').selectedOptions[0].innerText;
+        switch (textWidth) {
+          case 'readable':
+            document.body.style.maxWidth="70ch";
+            break;
+          default:
+            document.body.style.maxWidth="";
+        }
       }
 
       function main() {
