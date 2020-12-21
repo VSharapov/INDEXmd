@@ -48,27 +48,35 @@
       cssLight = document.styleSheets[1];
       cssDark = document.styleSheets[2];
 
+      menuOptions = {'theme': {
+        'auto': true,
+        'dark': false,
+        'light': false,
+      }, 'text-width': {
+        'full-width': true,
+        'readable': false,
+      }, 'font-family': {
+        'serif': false,
+        'sans-serif': true,
+        'monospace': false,
+      }};
+      var selectedOptions = {};
+      for (i in menuOptions) {
+        for (j in menuOptions[i]) {
+          if (menuOptions[i][j]) {
+            selectedOptions[i] = j;
+          }
+        }
+      };
       function toggleMenu () {
         miniMenuHTML = '<button style="float:right;" onclick="toggleMenu()">☰</button>';
-        menuOptions = {'theme': {
-          'auto': true, // default
-          'dark': false,
-          'light': false,
-        }, 'text-width': {
-          'full-width': true,
-          'readable': false,
-        }, 'font-family': {
-          'serif': false,
-          'sans-serif': true,
-          'monospace': false,
-        }};
         var mDiv = document.getElementById('indexmdmenu');
         if (mDiv.innerHTML == miniMenuHTML) {
           bigMenuHTML = miniMenuHTML;
           for (i in menuOptions){
             bigMenuHTML += '<select id="' + i + '"' + (i == Object.keys(menuOptions)[0] ? '' : ' style="width: 100%;"') + '>';
             for (j in menuOptions[i]) {
-              bigMenuHTML += '<option value="' + j + '"' + (menuOptions[i][j] ? ' selected' : '') + '>' + j + '</option>';
+              bigMenuHTML += '<option value="' + j + '"' + (selectedOptions[i] == [j] ? ' selected' : '') + '>' + j + '</option>';
             }
             bigMenuHTML += '</select><br />';
           }
@@ -79,8 +87,14 @@
       }
 
       function menuEffect() {
-        theme = document.getElementById('theme').selectedOptions[0].innerText;
-        switch (theme) {
+        selectedOptions['theme'] = document.getElementById('theme').selectedOptions[0].innerText;
+        selectedOptions['text-width'] = document.getElementById('text-width').selectedOptions[0].innerText;
+        selectedOptions['font-family'] = document.getElementById('font-family').selectedOptions[0].innerText;
+        settingsApply();
+      }
+
+      function settingsApply() {
+        switch (selectedOptions['theme']) {
           case 'dark':
             cssDark.media = cssAlwaysMedia;
             cssLight.media = cssNeverMedia;
@@ -93,20 +107,19 @@
             cssDark.media = cssDarkMedia;
             cssLight.media = cssLightMedia;
         }
-        textWidth = document.getElementById('text-width').selectedOptions[0].innerText;
-        switch (textWidth) {
+        switch (selectedOptions['text-width']) {
           case 'readable':
             document.body.style.maxWidth="70ch";
             break;
           default:
             document.body.style.maxWidth="";
         }
-        fontFamily = document.getElementById('font-family').selectedOptions[0].innerText;
-        document.body.style.fontFamily=fontFamily;
+        document.body.style.fontFamily=selectedOptions['font-family'];
       }
 
       function main() {
         toggleMenu();
+        settingsApply();
         oReq = new XMLHttpRequest();
         oReq.addEventListener("load", reqListener);
         oReq.open("GET", readme);
