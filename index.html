@@ -4,11 +4,6 @@
     <title></title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <style type="text/css">
-      @media (prefers-color-scheme: dark) {
-        body {background-color: black; color: white;}
-        a {filter: invert(1) brightness(0.5) invert(1);}
-        select, button {filter: invert(1);}
-      }
       code, pre {
         background-color: #6666;
         padding: 2px;
@@ -17,6 +12,16 @@
         background-color: #0000;
         padding: 0px;
       }
+    </style>
+    <style type="text/css" media="(prefers-color-scheme: light)">
+    </style>
+    <style type="text/css" media="(prefers-color-scheme: dark)">
+      body {background-color: black; color: white;}
+      a {filter: invert(1) brightness(0.5) invert(1);}
+      select, button {filter: invert(1);}
+    </style>
+    <style type="text/css" media="(prefers-color-scheme: never)">
+      body {background-color: red;}
     </style>
     <script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.1/dist/showdown.min.js"></script>
     <script>
@@ -36,25 +41,85 @@
         if(location.href.split('#').length > 1){location.href=location.href}
       }
 
-      miniMenuHTML = '<button style="float:right;" onclick="toggleMenu()">☰</button>';
-      bigMenuHTML = '<select id="theme"><option value="a">auto</option><option value="d">dark</option><option value="l">light</option></select>';
-      bigMenuHTML += '<br /><select id="text-width" style="width: 100%"><option value="f">full-width</option><option value="r">readable</option></select>';
-      bigMenuHTML += '<br /><select id="font-family" style="width: 100%"><option value="s">serif</option><option value="n">sans-serif</option><option value="m">monospace</option></select>';
+      cssAlwaysMedia = document.styleSheets[0].media;
+      cssLightMedia = document.styleSheets[1].media;
+      cssDarkMedia = document.styleSheets[2].media;
+      cssNeverMedia = document.styleSheets[3].media;
+      cssLight = document.styleSheets[1];
+      cssDark = document.styleSheets[2];
+
+      menuOptions = {'theme': {
+        'auto': true,
+        'dark': false,
+        'light': false,
+      }, 'text-width': {
+        'full-width': true,
+        'readable': false,
+      }, 'font-family': {
+        'serif': false,
+        'sans-serif': true,
+        'monospace': false,
+      }};
+      var selectedOptions = {};
+      for (i in menuOptions) {
+        for (j in menuOptions[i]) {
+          if (menuOptions[i][j]) {
+            selectedOptions[i] = j;
+          }
+        }
+      };
       function toggleMenu () {
+        miniMenuHTML = '<button style="float:right;" onclick="toggleMenu()">☰</button>';
         var mDiv = document.getElementById('indexmdmenu');
         if (mDiv.innerHTML == miniMenuHTML) {
-          mDiv.innerHTML += bigMenuHTML;
+          bigMenuHTML = miniMenuHTML;
+          for (i in menuOptions){
+            bigMenuHTML += '<select id="' + i + '"' + (i == Object.keys(menuOptions)[0] ? '' : ' style="width: 100%;"') + '>';
+            for (j in menuOptions[i]) {
+              bigMenuHTML += '<option value="' + j + '"' + (selectedOptions[i] == [j] ? ' selected' : '') + '>' + j + '</option>';
+            }
+            bigMenuHTML += '</select><br />';
+          }
+          mDiv.innerHTML = bigMenuHTML;
         }else{
           mDiv.innerHTML = miniMenuHTML;
         }
       }
 
       function menuEffect() {
-        console.log('menu has changed');
+        selectedOptions['theme'] = document.getElementById('theme').selectedOptions[0].innerText;
+        selectedOptions['text-width'] = document.getElementById('text-width').selectedOptions[0].innerText;
+        selectedOptions['font-family'] = document.getElementById('font-family').selectedOptions[0].innerText;
+        settingsApply();
+      }
+
+      function settingsApply() {
+        switch (selectedOptions['theme']) {
+          case 'dark':
+            cssDark.media = cssAlwaysMedia;
+            cssLight.media = cssNeverMedia;
+            break;
+          case 'light':
+            cssDark.media = cssNeverMedia;
+            cssLight.media = cssAlwaysMedia;
+            break;
+          default:
+            cssDark.media = cssDarkMedia;
+            cssLight.media = cssLightMedia;
+        }
+        switch (selectedOptions['text-width']) {
+          case 'readable':
+            document.body.style.maxWidth="70ch";
+            break;
+          default:
+            document.body.style.maxWidth="";
+        }
+        document.body.style.fontFamily=selectedOptions['font-family'];
       }
 
       function main() {
         toggleMenu();
+        settingsApply();
         oReq = new XMLHttpRequest();
         oReq.addEventListener("load", reqListener);
         oReq.open("GET", readme);
