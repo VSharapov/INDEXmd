@@ -70,13 +70,25 @@
         'monospace': false,
       }};
       var selectedOptions = {};
+      // Defaults...
       for (i in menuOptions) {
         for (j in menuOptions[i]) {
           if (menuOptions[i][j]) {
             selectedOptions[i] = j;
           }
         }
-      };
+      }
+      // ...first overriden by localStorage...
+      for (i in menuOptions) {
+        if (localStorage.getItem(i) in menuOptions[i]) {
+          selectedOptions[i] = localStorage.getItem(i);
+        }
+      }
+      // ...then overriden by GET parameters
+      for (i in menuOptions) {
+        console.log('TODO');
+      }
+
       function toggleMenu () {
         miniMenuHTML = '<button style="float:right;" onclick="toggleMenu()">☰</button>';
         var mDiv = document.getElementById('indexmdmenu');
@@ -96,9 +108,14 @@
       }
 
       function menuEffect() {
-        selectedOptions['theme'] = document.getElementById('theme').selectedOptions[0].innerText;
-        selectedOptions['text-width'] = document.getElementById('text-width').selectedOptions[0].innerText;
-        selectedOptions['font-family'] = document.getElementById('font-family').selectedOptions[0].innerText;
+        for(i in menuOptions){
+          selectedOptions[i] = document.getElementById(i).selectedOptions[0].innerText;
+          if (menuOptions[i][selectedOptions[i]]) { // Unset if default
+            localStorage.removeItem(i);
+          }else{ // Set if not default
+            localStorage.setItem(i, selectedOptions[i]);
+          }
+        }
         settingsApply();
       }
 
