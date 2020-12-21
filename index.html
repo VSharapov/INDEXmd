@@ -3,6 +3,7 @@
   <head>
     <title></title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="icon" href=''>
     <style type="text/css">
       code, pre {
         background-color: #6666;
@@ -30,6 +31,11 @@
       converter = new showdown.Converter();
       html = converter.makeHtml('loading ``' + readme + '`` ...');
 
+      function makeFaviconText(textIn) {
+        document.querySelector("link[rel~='icon']").href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text paint-order="stroke" stroke="white" stroke-width="16" fill="currentColor" font-stretch="ultra-condensed" font-family="mono" y=".9em" font-size="90">' + textIn + '</text></svg>';
+      }
+      makeFaviconText('⏳');
+
       function reqListener () {
         if ((this.status >= 200 && this.status < 300) || this.status == 304)  {
           html = converter.makeHtml(this.responseText);
@@ -39,7 +45,9 @@
         }
         document.getElementById('readme').innerHTML = html;
         document.title = document.getElementById('readme').children[0].innerText;
+        makeFaviconText(document.title);
         if(location.href.split('#').length > 1){location.href=location.href}
+
       }
 
       cssAlwaysMedia = document.styleSheets[0].media;
