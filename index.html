@@ -66,7 +66,7 @@
         if (mDiv.innerHTML == miniMenuHTML) {
           bigMenuHTML = miniMenuHTML;
           for (i in menuOptions){
-            bigMenuHTML += '<select id="' + i + '">';
+            bigMenuHTML += '<select id="' + i + '"' + (i == Object.keys(menuOptions)[0] ? '' : ' style="width: 100%;"') + '>';
             for (j in menuOptions[i]) {
               bigMenuHTML += '<option value="' + j + '"' + (menuOptions[i][j] ? ' selected' : '') + '>' + j + '</option>';
             }
