@@ -28,30 +28,32 @@
     <script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.1/dist/showdown.min.js"></script>
     <script>
 var fileToRender = 'README.md';
-var getParams = {};
-const converter = new showdown.Converter();
-var html = '';
+var getParams    = {};
+const converter  = new showdown.Converter();
+var html         = '';
 var oreq;
 
 const cssAlwaysMedia = document.styleSheets[0].media.mediaText;
 const cssLightMedia  = document.styleSheets[1].media.mediaText;
 const cssDarkMedia   = document.styleSheets[2].media.mediaText;
 const cssNeverMedia  = document.styleSheets[3].media.mediaText;
-var cssLight = document.styleSheets[1];
-var cssDark  = document.styleSheets[2];
+var cssLight         = document.styleSheets[1];
+var cssDark          = document.styleSheets[2];
 
-const menuOptions = {'theme': {
-  'auto': true,
-  'dark': false,
-  'light': false
-}, 'text-width': {
-  'full-width': true,
-  'readable': false
-}, 'font-family': {
-  'serif': false,
-  'sans-serif': true,
-  'monospace': false
-}};
+const menuOptions = {
+  'theme': {
+    'auto': true,
+    'dark': false,
+    'light': false
+  }, 'text-width': {
+    'full-width': true,
+    'readable': false
+  }, 'font-family': {
+    'serif': false,
+    'sans-serif': true,
+    'monospace': false
+  }
+};
 var selectedOptions = {};
 
 function init () {
@@ -99,7 +101,7 @@ function makeFaviconText (textIn) {
     '<text paint-order="stroke" stroke="white" stroke-width="16" ' +
     'fill="black" font-stretch="ultra-condensed" font-family="mono" ' +
     'y=".9em" font-size="90">' + textIn + '</text></svg>';
-  document.querySelector('link[rel~="icon"]').href=svg;
+  document.querySelector('link[rel~="icon"]').href = svg;
 }
 
 function reqListener () {
@@ -113,6 +115,7 @@ function reqListener () {
     makeFaviconText('❌');
     console.log(this);
   }
+  // Scroll to #frament - remember, the content wasn't there onload
   if (location.href.split('#').length > 1) {location.href = location.href;}
 }
 
@@ -170,12 +173,12 @@ function settingsApply () {
   }
   switch (selectedOptions['text-width']) {
     case 'readable':
-      document.body.style.maxWidth='70ch';
+      document.body.style.maxWidth = '70ch';
       break;
     default:
-      document.body.style.maxWidth='';
+      document.body.style.maxWidth = '';
   }
-  document.body.style.fontFamily=selectedOptions['font-family'];
+  document.body.style.fontFamily = selectedOptions['font-family'];
   var newTarget = document.getElementById('fileToRender');
   if (newTarget && newTarget.value != fileToRender){
     fileToRender = newTarget.value;
