@@ -27,18 +27,70 @@
     </style>
     <script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.1/dist/showdown.min.js"></script>
     <script>
+var fileToRender = 'README.md';
 var getParams = {};
-getPairs = location.search.substr(1).split('&');
-for (i in getPairs) {
-  getParams[getPairs[i].split('=')[0]] = getPairs[i].split('=')[1];
-}
+const converter = new showdown.Converter();
+var html = '';
 
-fileToRender = 'README.md';
-if ('fileToRender' in getParams){
-  fileToRender = getParams['fileToRender'];
+const cssAlwaysMedia = document.styleSheets[0].media.mediaText;
+const cssLightMedia  = document.styleSheets[1].media.mediaText;
+const cssDarkMedia   = document.styleSheets[2].media.mediaText;
+const cssNeverMedia  = document.styleSheets[3].media.mediaText;
+var cssLight = document.styleSheets[1];
+var cssDark  = document.styleSheets[2];
+
+const menuOptions = {'theme': {
+  'auto': true,
+  'dark': false,
+  'light': false,
+}, 'text-width': {
+  'full-width': true,
+  'readable': false,
+}, 'font-family': {
+  'serif': false,
+  'sans-serif': true,
+  'monospace': false,
+}};
+var selectedOptions = {};
+
+function init () {
+  // GET parameters
+  getPairs = location.search.substr(1).split('&');
+  for (pair of getPairs) {
+    getParams[pair.split('=')[0]] = pair.split('=')[1];
+  }
+
+  // Options
+  for (i in menuOptions) {
+    for (j in menuOptions[i]) {
+      if (menuOptions[i][j]) {
+        // Default...
+        selectedOptions[i] = j;
+      }
+    }
+  }
+  for (i in menuOptions) {
+    if (localStorage.getItem(i) in menuOptions[i]) {
+      // ...overridden by localStorage...
+      selectedOptions[i] = localStorage.getItem(i);
+    }
+  }
+  for (i in menuOptions) {
+    if (getParams[i] in menuOptions[i]) {
+      // ...overriden by GET parameters
+      selectedOptions[i] = getParams[i];
+    }
+  }
+
+  if ('fileToRender' in getParams){
+    fileToRender = getParams['fileToRender'];
+  }
+
+  // Loading...
+  html = converter.makeHtml('loading ``' + fileToRender + '`` ...');
+  makeFaviconText('⏳');
 }
-converter = new showdown.Converter();
-html = converter.makeHtml('loading ``' + fileToRender + '`` ...');
+init();
 
 function makeFaviconText(textIn) {
   var svg = 'data:image/svg+xml,' +
@@ -48,7 +100,6 @@ function makeFaviconText(textIn) {
     'y=".9em" font-size="90">' + textIn + '</text></svg>';
   document.querySelector('link[rel~="icon"]').href=svg;
 }
-makeFaviconText('⏳');
 
 function reqListener () {
   var renderedMarkdown = document.getElementById('renderedMarkdown');
@@ -62,47 +113,6 @@ function reqListener () {
     console.log(this);
   }
   if (location.href.split('#').length > 1) {location.href = location.href;}
-}
-
-cssAlwaysMedia = document.styleSheets[0].media.mediaText;
-cssLightMedia  = document.styleSheets[1].media.mediaText;
-cssDarkMedia   = document.styleSheets[2].media.mediaText;
-cssNeverMedia  = document.styleSheets[3].media.mediaText;
-cssLight = document.styleSheets[1];
-cssDark  = document.styleSheets[2];
-
-menuOptions = {'theme': {
-  'auto': true,
-  'dark': false,
-  'light': false,
-}, 'text-width': {
-  'full-width': true,
-  'readable': false,
-}, 'font-family': {
-  'serif': false,
-  'sans-serif': true,
-  'monospace': false,
-}};
-var selectedOptions = {};
-// Defaults...
-for (i in menuOptions) {
-  for (j in menuOptions[i]) {
-    if (menuOptions[i][j]) {
-      selectedOptions[i] = j;
-    }
-  }
-}
-// ...first overriden by localStorage...
-for (i in menuOptions) {
-  if (localStorage.getItem(i) in menuOptions[i]) {
-    selectedOptions[i] = localStorage.getItem(i);
-  }
-}
-// ...then overriden by GET parameters
-for (i in menuOptions) {
-  if (getParams[i] in menuOptions[i]) {
-    selectedOptions[i] = getParams[i];
-  }
 }
 
 function toggleMenu () {
