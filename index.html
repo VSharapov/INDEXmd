@@ -41,16 +41,22 @@ converter = new showdown.Converter();
 html = converter.makeHtml('loading ``' + fileToRender + '`` ...');
 
 function makeFaviconText(textIn) {
-  document.querySelector('link[rel~="icon"]').href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text paint-order="stroke" stroke="white" stroke-width="16" fill="black" font-stretch="ultra-condensed" font-family="mono" y=".9em" font-size="90">' + textIn + '</text></svg>';
+  var svg = 'data:image/svg+xml,' +
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
+    '<text paint-order="stroke" stroke="white" stroke-width="16" ' +
+    'fill="black" font-stretch="ultra-condensed" font-family="mono" ' +
+    'y=".9em" font-size="90">' + textIn + '</text></svg>';
+  document.querySelector('link[rel~="icon"]').href=svg;
 }
 makeFaviconText('⏳');
 
 function reqListener () {
-  document.getElementById('renderedMarkdown').innerHTML = converter.makeHtml(this.responseText);
-  document.title = document.getElementById('renderedMarkdown').children[0].innerText;
+  var renderedMarkdown = document.getElementById('renderedMarkdown');
+  renderedMarkdown.innerHTML = converter.makeHtml(this.responseText);
+  document.title = renderedMarkdown.children[0].innerText;
   makeFaviconText(document.title);
   if ((this.status < 200 || this.status > 300) && this.status != 304) {
-    document.getElementById('renderedMarkdown').innerHTML = converter.makeHtml('Status ' + this.status);
+    renderedMarkdown.innerHTML = converter.makeHtml('Status ' + this.status);
     document.title = this.status;
     makeFaviconText('❌');
     console.log(this);
@@ -100,27 +106,33 @@ for (i in menuOptions) {
 }
 
 function toggleMenu () {
-  miniMenuHTML = '<button style="float:right;" onclick="toggleMenu()">☰</button>';
+  miniMenu = '<button style="float:right;" onclick="toggleMenu()">☰</button>';
   var mDiv = document.getElementById('indexmdmenu');
-  if (mDiv.innerHTML == miniMenuHTML) {
-    bigMenuHTML = miniMenuHTML;
+  if (mDiv.innerHTML == miniMenu) {
+    bigMenu = miniMenu;
     for (i in menuOptions){
-      bigMenuHTML += '<select id="' + i + '"' + (i == Object.keys(menuOptions)[0] ? '' : ' style="width: 100%;"') + '>';
+      bigMenu += '<select id="' + i + '"' +
+        (i == Object.keys(menuOptions)[0] ? '' : ' style="width:100%;"') + '>';
       for (j in menuOptions[i]) {
-        bigMenuHTML += '<option value="' + j + '"' + (selectedOptions[i] == [j] ? ' selected' : '') + '>' + j + '</option>';
+        bigMenu += '<option value="' + j + '"' +
+          (selectedOptions[i] == [j] ? ' selected' : '') +
+          '>' + j + '</option>';
       }
-      bigMenuHTML += '</select><br />';
+      bigMenu += '</select><br />';
     }
-    bigMenuHTML += '<input type="text" size=8 id="fileToRender" style="box-sizing: border-box; width:100%;" value="' + fileToRender + '"><br />';
-    mDiv.innerHTML = bigMenuHTML;
+    bigMenu += '<input type="text" size=8 id="fileToRender" ' +
+      'style="box-sizing:border-box; width:100%;" value="' +
+      fileToRender + '"><br />';
+    mDiv.innerHTML = bigMenu;
   }else{
-    mDiv.innerHTML = miniMenuHTML;
+    mDiv.innerHTML = miniMenu;
   }
 }
 
 function menuEffect() {
   for(i in menuOptions){
-    selectedOptions[i] = document.getElementById(i).selectedOptions[0].innerText;
+    var selectElement = document.getElementById(i);
+    selectedOptions[i] = selectElement.selectedOptions[0].innerText;
     if (menuOptions[i][selectedOptions[i]]) { // Unset if default
       localStorage.removeItem(i);
     }else{ // Set if not default
@@ -171,7 +183,7 @@ function main() {
     </script>
 	</head>
   <body onload="main()">
-    <div id="indexmdmenu" style="float:right; max-width: 30vw; border: dotted" onchange="menuEffect()"></div>
+    <div id="indexmdmenu" style="float:right; max-width:30vw; border:dotted" onchange="menuEffect()"></div>
     <div id="renderedMarkdown"></div>
 	</body>
 </html>
