@@ -27,147 +27,147 @@
     </style>
     <script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.1/dist/showdown.min.js"></script>
     <script>
-      var getParams = {};
-      getPairs = location.search.substr(1).split("&");
-      for (i in getPairs) {
-        getParams[getPairs[i].split("=")[0]] = getPairs[i].split("=")[1];
-      }
+var getParams = {};
+getPairs = location.search.substr(1).split("&");
+for (i in getPairs) {
+  getParams[getPairs[i].split("=")[0]] = getPairs[i].split("=")[1];
+}
 
-      targetMD = 'README.md';
-      if ('target.md' in getParams){
-        targetMD = getParams['target.md'];
-      }
-      converter = new showdown.Converter();
-      html = converter.makeHtml('loading ``' + targetMD + '`` ...');
+targetMD = 'README.md';
+if ('target.md' in getParams){
+  targetMD = getParams['target.md'];
+}
+converter = new showdown.Converter();
+html = converter.makeHtml('loading ``' + targetMD + '`` ...');
 
-      function makeFaviconText(textIn) {
-        document.querySelector("link[rel~='icon']").href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text paint-order="stroke" stroke="white" stroke-width="16" fill="black" font-stretch="ultra-condensed" font-family="mono" y=".9em" font-size="90">' + textIn + '</text></svg>';
-      }
-      makeFaviconText('⏳');
+function makeFaviconText(textIn) {
+  document.querySelector("link[rel~='icon']").href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text paint-order="stroke" stroke="white" stroke-width="16" fill="black" font-stretch="ultra-condensed" font-family="mono" y=".9em" font-size="90">' + textIn + '</text></svg>';
+}
+makeFaviconText('⏳');
 
-      function reqListener () {
-        document.getElementById('readme').innerHTML = converter.makeHtml(this.responseText);
-        document.title = document.getElementById('readme').children[0].innerText;
-        makeFaviconText(document.title);
-        if ((this.status < 200 || this.status > 300) && this.status != 304) {
-          document.getElementById('readme').innerHTML = converter.makeHtml("Status " + this.status);
-          document.title = this.status;
-          makeFaviconText('❌');
-          console.log(this);
-        }
-        if(location.href.split('#').length > 1){location.href=location.href}
-      }
+function reqListener () {
+  document.getElementById('readme').innerHTML = converter.makeHtml(this.responseText);
+  document.title = document.getElementById('readme').children[0].innerText;
+  makeFaviconText(document.title);
+  if ((this.status < 200 || this.status > 300) && this.status != 304) {
+    document.getElementById('readme').innerHTML = converter.makeHtml("Status " + this.status);
+    document.title = this.status;
+    makeFaviconText('❌');
+    console.log(this);
+  }
+  if(location.href.split('#').length > 1){location.href=location.href}
+}
 
-      cssAlwaysMedia = document.styleSheets[0].media.mediaText;
-      cssLightMedia  = document.styleSheets[1].media.mediaText;
-      cssDarkMedia   = document.styleSheets[2].media.mediaText;
-      cssNeverMedia  = document.styleSheets[3].media.mediaText;
-      cssLight = document.styleSheets[1];
-      cssDark  = document.styleSheets[2];
+cssAlwaysMedia = document.styleSheets[0].media.mediaText;
+cssLightMedia  = document.styleSheets[1].media.mediaText;
+cssDarkMedia   = document.styleSheets[2].media.mediaText;
+cssNeverMedia  = document.styleSheets[3].media.mediaText;
+cssLight = document.styleSheets[1];
+cssDark  = document.styleSheets[2];
 
-      menuOptions = {'theme': {
-        'auto': true,
-        'dark': false,
-        'light': false,
-      }, 'text-width': {
-        'full-width': true,
-        'readable': false,
-      }, 'font-family': {
-        'serif': false,
-        'sans-serif': true,
-        'monospace': false,
-      }};
-      var selectedOptions = {};
-      // Defaults...
-      for (i in menuOptions) {
-        for (j in menuOptions[i]) {
-          if (menuOptions[i][j]) {
-            selectedOptions[i] = j;
-          }
-        }
-      }
-      // ...first overriden by localStorage...
-      for (i in menuOptions) {
-        if (localStorage.getItem(i) in menuOptions[i]) {
-          selectedOptions[i] = localStorage.getItem(i);
-        }
-      }
-      // ...then overriden by GET parameters
-      for (i in menuOptions) {
-        if (getParams[i] in menuOptions[i]) {
-          selectedOptions[i] = getParams[i];
-        }
-      }
+menuOptions = {'theme': {
+  'auto': true,
+  'dark': false,
+  'light': false,
+}, 'text-width': {
+  'full-width': true,
+  'readable': false,
+}, 'font-family': {
+  'serif': false,
+  'sans-serif': true,
+  'monospace': false,
+}};
+var selectedOptions = {};
+// Defaults...
+for (i in menuOptions) {
+  for (j in menuOptions[i]) {
+    if (menuOptions[i][j]) {
+      selectedOptions[i] = j;
+    }
+  }
+}
+// ...first overriden by localStorage...
+for (i in menuOptions) {
+  if (localStorage.getItem(i) in menuOptions[i]) {
+    selectedOptions[i] = localStorage.getItem(i);
+  }
+}
+// ...then overriden by GET parameters
+for (i in menuOptions) {
+  if (getParams[i] in menuOptions[i]) {
+    selectedOptions[i] = getParams[i];
+  }
+}
 
-      function toggleMenu () {
-        miniMenuHTML = '<button style="float:right;" onclick="toggleMenu()">☰</button>';
-        var mDiv = document.getElementById('indexmdmenu');
-        if (mDiv.innerHTML == miniMenuHTML) {
-          bigMenuHTML = miniMenuHTML;
-          for (i in menuOptions){
-            bigMenuHTML += '<select id="' + i + '"' + (i == Object.keys(menuOptions)[0] ? '' : ' style="width: 100%;"') + '>';
-            for (j in menuOptions[i]) {
-              bigMenuHTML += '<option value="' + j + '"' + (selectedOptions[i] == [j] ? ' selected' : '') + '>' + j + '</option>';
-            }
-            bigMenuHTML += '</select><br />';
-          }
-          bigMenuHTML += '<input type="text" size=8 id="target.md" style="box-sizing: border-box; width:100%;" value="' + targetMD + '"><br />'
-          mDiv.innerHTML = bigMenuHTML;
-        }else{
-          mDiv.innerHTML = miniMenuHTML;
-        }
+function toggleMenu () {
+  miniMenuHTML = '<button style="float:right;" onclick="toggleMenu()">☰</button>';
+  var mDiv = document.getElementById('indexmdmenu');
+  if (mDiv.innerHTML == miniMenuHTML) {
+    bigMenuHTML = miniMenuHTML;
+    for (i in menuOptions){
+      bigMenuHTML += '<select id="' + i + '"' + (i == Object.keys(menuOptions)[0] ? '' : ' style="width: 100%;"') + '>';
+      for (j in menuOptions[i]) {
+        bigMenuHTML += '<option value="' + j + '"' + (selectedOptions[i] == [j] ? ' selected' : '') + '>' + j + '</option>';
       }
+      bigMenuHTML += '</select><br />';
+    }
+    bigMenuHTML += '<input type="text" size=8 id="target.md" style="box-sizing: border-box; width:100%;" value="' + targetMD + '"><br />'
+    mDiv.innerHTML = bigMenuHTML;
+  }else{
+    mDiv.innerHTML = miniMenuHTML;
+  }
+}
 
-      function menuEffect() {
-        for(i in menuOptions){
-          selectedOptions[i] = document.getElementById(i).selectedOptions[0].innerText;
-          if (menuOptions[i][selectedOptions[i]]) { // Unset if default
-            localStorage.removeItem(i);
-          }else{ // Set if not default
-            localStorage.setItem(i, selectedOptions[i]);
-          }
-        }
-        settingsApply();
-      }
+function menuEffect() {
+  for(i in menuOptions){
+    selectedOptions[i] = document.getElementById(i).selectedOptions[0].innerText;
+    if (menuOptions[i][selectedOptions[i]]) { // Unset if default
+      localStorage.removeItem(i);
+    }else{ // Set if not default
+      localStorage.setItem(i, selectedOptions[i]);
+    }
+  }
+  settingsApply();
+}
 
-      function settingsApply() {
-        switch (selectedOptions['theme']) {
-          case 'dark':
-            cssDark.media.mediaText  = cssAlwaysMedia;
-            cssLight.media.mediaText = cssNeverMedia;
-            break;
-          case 'light':
-            cssDark.media.mediaText  = cssNeverMedia;
-            cssLight.media.mediaText = cssAlwaysMedia;
-            break;
-          default:
-            cssDark.media.mediaText  = cssDarkMedia;
-            cssLight.media.mediaText = cssLightMedia;
-        }
-        switch (selectedOptions['text-width']) {
-          case 'readable':
-            document.body.style.maxWidth="70ch";
-            break;
-          default:
-            document.body.style.maxWidth="";
-        }
-        document.body.style.fontFamily=selectedOptions['font-family'];
-        newTarget = document.getElementById('target.md');
-        if (newTarget && newTarget.value != targetMD){
-          targetMD = newTarget.value;
-          oReq.open("GET", targetMD);
-          oReq.send();
-        }
-      }
+function settingsApply() {
+  switch (selectedOptions['theme']) {
+    case 'dark':
+      cssDark.media.mediaText  = cssAlwaysMedia;
+      cssLight.media.mediaText = cssNeverMedia;
+      break;
+    case 'light':
+      cssDark.media.mediaText  = cssNeverMedia;
+      cssLight.media.mediaText = cssAlwaysMedia;
+      break;
+    default:
+      cssDark.media.mediaText  = cssDarkMedia;
+      cssLight.media.mediaText = cssLightMedia;
+  }
+  switch (selectedOptions['text-width']) {
+    case 'readable':
+      document.body.style.maxWidth="70ch";
+      break;
+    default:
+      document.body.style.maxWidth="";
+  }
+  document.body.style.fontFamily=selectedOptions['font-family'];
+  newTarget = document.getElementById('target.md');
+  if (newTarget && newTarget.value != targetMD){
+    targetMD = newTarget.value;
+    oReq.open("GET", targetMD);
+    oReq.send();
+  }
+}
 
-      function main() {
-        toggleMenu();
-        settingsApply();
-        oReq = new XMLHttpRequest();
-        oReq.addEventListener("load", reqListener);
-        oReq.open("GET", targetMD);
-        oReq.send();
-      }
+function main() {
+  toggleMenu();
+  settingsApply();
+  oReq = new XMLHttpRequest();
+  oReq.addEventListener("load", reqListener);
+  oReq.open("GET", targetMD);
+  oReq.send();
+}
     </script>
 	</head>
   <body onload="main()">
