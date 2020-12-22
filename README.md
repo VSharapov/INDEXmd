@@ -16,6 +16,7 @@ Stuff you might wanna mess with:
 - Markdown parser options
     - Before `new showdown.Converter();` e.g. `showdown.setOption('tables', true);`
     - See defaults (and all options) with `console.log(showdown.getOptions());`
+- Da🅽k mode: `color: maroon;`
 
 ---
 
