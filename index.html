@@ -50,12 +50,12 @@
 
       }
 
-      cssAlwaysMedia = document.styleSheets[0].media;
-      cssLightMedia = document.styleSheets[1].media;
-      cssDarkMedia = document.styleSheets[2].media;
-      cssNeverMedia = document.styleSheets[3].media;
+      cssAlwaysMedia = document.styleSheets[0].media.mediaText;
+      cssLightMedia  = document.styleSheets[1].media.mediaText;
+      cssDarkMedia   = document.styleSheets[2].media.mediaText;
+      cssNeverMedia  = document.styleSheets[3].media.mediaText;
       cssLight = document.styleSheets[1];
-      cssDark = document.styleSheets[2];
+      cssDark  = document.styleSheets[2];
 
       menuOptions = {'theme': {
         'auto': true,
@@ -129,16 +129,16 @@
       function settingsApply() {
         switch (selectedOptions['theme']) {
           case 'dark':
-            cssDark.media = cssAlwaysMedia;
-            cssLight.media = cssNeverMedia;
+            cssDark.media.mediaText  = cssAlwaysMedia;
+            cssLight.media.mediaText = cssNeverMedia;
             break;
           case 'light':
-            cssDark.media = cssNeverMedia;
-            cssLight.media = cssAlwaysMedia;
+            cssDark.media.mediaText  = cssNeverMedia;
+            cssLight.media.mediaText = cssAlwaysMedia;
             break;
           default:
-            cssDark.media = cssDarkMedia;
-            cssLight.media = cssLightMedia;
+            cssDark.media.mediaText  = cssDarkMedia;
+            cssLight.media.mediaText = cssLightMedia;
         }
         switch (selectedOptions['text-width']) {
           case 'readable':
