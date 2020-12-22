@@ -3,7 +3,7 @@
   <head>
     <title></title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <link rel="icon" href=''>
+    <link rel="icon" href="">
     <style type="text/css">
       code, pre {
         background-color: #6666;
@@ -28,9 +28,9 @@
     <script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.1/dist/showdown.min.js"></script>
     <script>
 var getParams = {};
-getPairs = location.search.substr(1).split("&");
+getPairs = location.search.substr(1).split('&');
 for (i in getPairs) {
-  getParams[getPairs[i].split("=")[0]] = getPairs[i].split("=")[1];
+  getParams[getPairs[i].split('=')[0]] = getPairs[i].split('=')[1];
 }
 
 targetMD = 'README.md';
@@ -41,7 +41,7 @@ converter = new showdown.Converter();
 html = converter.makeHtml('loading ``' + targetMD + '`` ...');
 
 function makeFaviconText(textIn) {
-  document.querySelector("link[rel~='icon']").href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text paint-order="stroke" stroke="white" stroke-width="16" fill="black" font-stretch="ultra-condensed" font-family="mono" y=".9em" font-size="90">' + textIn + '</text></svg>';
+  document.querySelector('link[rel~="icon"]').href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text paint-order="stroke" stroke="white" stroke-width="16" fill="black" font-stretch="ultra-condensed" font-family="mono" y=".9em" font-size="90">' + textIn + '</text></svg>';
 }
 makeFaviconText('⏳');
 
@@ -50,7 +50,7 @@ function reqListener () {
   document.title = document.getElementById('readme').children[0].innerText;
   makeFaviconText(document.title);
   if ((this.status < 200 || this.status > 300) && this.status != 304) {
-    document.getElementById('readme').innerHTML = converter.makeHtml("Status " + this.status);
+    document.getElementById('readme').innerHTML = converter.makeHtml('Status ' + this.status);
     document.title = this.status;
     makeFaviconText('❌');
     console.log(this);
@@ -146,16 +146,16 @@ function settingsApply() {
   }
   switch (selectedOptions['text-width']) {
     case 'readable':
-      document.body.style.maxWidth="70ch";
+      document.body.style.maxWidth='70ch';
       break;
     default:
-      document.body.style.maxWidth="";
+      document.body.style.maxWidth='';
   }
   document.body.style.fontFamily=selectedOptions['font-family'];
   newTarget = document.getElementById('target.md');
   if (newTarget && newTarget.value != targetMD){
     targetMD = newTarget.value;
-    oReq.open("GET", targetMD);
+    oReq.open('GET', targetMD);
     oReq.send();
   }
 }
@@ -164,8 +164,8 @@ function main() {
   toggleMenu();
   settingsApply();
   oReq = new XMLHttpRequest();
-  oReq.addEventListener("load", reqListener);
-  oReq.open("GET", targetMD);
+  oReq.addEventListener('load', reqListener);
+  oReq.open('GET', targetMD);
   oReq.send();
 }
     </script>
