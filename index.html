@@ -55,7 +55,7 @@ function reqListener () {
     makeFaviconText('❌');
     console.log(this);
   }
-  if(location.href.split('#').length > 1){location.href=location.href}
+  if (location.href.split('#').length > 1) {location.href = location.href;}
 }
 
 cssAlwaysMedia = document.styleSheets[0].media.mediaText;
@@ -111,7 +111,7 @@ function toggleMenu () {
       }
       bigMenuHTML += '</select><br />';
     }
-    bigMenuHTML += '<input type="text" size=8 id="target.md" style="box-sizing: border-box; width:100%;" value="' + targetMD + '"><br />'
+    bigMenuHTML += '<input type="text" size=8 id="target.md" style="box-sizing: border-box; width:100%;" value="' + targetMD + '"><br />';
     mDiv.innerHTML = bigMenuHTML;
   }else{
     mDiv.innerHTML = miniMenuHTML;
