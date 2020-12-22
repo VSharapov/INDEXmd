@@ -31,6 +31,7 @@ var fileToRender = 'README.md';
 var getParams = {};
 const converter = new showdown.Converter();
 var html = '';
+var oreq;
 
 const cssAlwaysMedia = document.styleSheets[0].media.mediaText;
 const cssLightMedia  = document.styleSheets[1].media.mediaText;
@@ -42,40 +43,40 @@ var cssDark  = document.styleSheets[2];
 const menuOptions = {'theme': {
   'auto': true,
   'dark': false,
-  'light': false,
+  'light': false
 }, 'text-width': {
   'full-width': true,
-  'readable': false,
+  'readable': false
 }, 'font-family': {
   'serif': false,
   'sans-serif': true,
-  'monospace': false,
+  'monospace': false
 }};
 var selectedOptions = {};
 
 function init () {
   // GET parameters
-  getPairs = location.search.substr(1).split('&');
-  for (pair of getPairs) {
-    getParams[pair.split('=')[0]] = pair.split('=')[1];
+  var getPairs = location.search.substr(1).split('&');
+  for (var i in getPairs) {
+    getParams[getPairs[i].split('=')[0]] = getPairs[i].split('=')[1];
   }
 
   // Options
-  for (i in menuOptions) {
-    for (j in menuOptions[i]) {
+  for (var i in menuOptions) {
+    for (var j in menuOptions[i]) {
       if (menuOptions[i][j]) {
         // Default...
         selectedOptions[i] = j;
       }
     }
   }
-  for (i in menuOptions) {
+  for (var i in menuOptions) {
     if (localStorage.getItem(i) in menuOptions[i]) {
       // ...overridden by localStorage...
       selectedOptions[i] = localStorage.getItem(i);
     }
   }
-  for (i in menuOptions) {
+  for (var i in menuOptions) {
     if (getParams[i] in menuOptions[i]) {
       // ...overriden by GET parameters
       selectedOptions[i] = getParams[i];
@@ -83,7 +84,7 @@ function init () {
   }
 
   if ('fileToRender' in getParams){
-    fileToRender = getParams['fileToRender'];
+    fileToRender = getParams.fileToRender;
   }
 
   // Loading...
@@ -92,7 +93,7 @@ function init () {
 }
 init();
 
-function makeFaviconText(textIn) {
+function makeFaviconText (textIn) {
   var svg = 'data:image/svg+xml,' +
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
     '<text paint-order="stroke" stroke="white" stroke-width="16" ' +
@@ -116,14 +117,15 @@ function reqListener () {
 }
 
 function toggleMenu () {
-  miniMenu = '<button style="float:right;" onclick="toggleMenu()">☰</button>';
+  var miniMenu = '<button style="float:right;" onclick="toggleMenu()">' + '☰' +
+    '</button>';
+  var bigMenu = miniMenu;
   var mDiv = document.getElementById('indexmdmenu');
   if (mDiv.innerHTML == miniMenu) {
-    bigMenu = miniMenu;
-    for (i in menuOptions){
+    for (var i in menuOptions){
       bigMenu += '<select id="' + i + '"' +
         (i == Object.keys(menuOptions)[0] ? '' : ' style="width:100%;"') + '>';
-      for (j in menuOptions[i]) {
+      for (var j in menuOptions[i]) {
         bigMenu += '<option value="' + j + '"' +
           (selectedOptions[i] == [j] ? ' selected' : '') +
           '>' + j + '</option>';
@@ -134,25 +136,25 @@ function toggleMenu () {
       'style="box-sizing:border-box; width:100%;" value="' +
       fileToRender + '"><br />';
     mDiv.innerHTML = bigMenu;
-  }else{
+  } else {
     mDiv.innerHTML = miniMenu;
   }
 }
 
-function menuEffect() {
-  for(i in menuOptions){
+function menuEffect () {
+  for (var i in menuOptions){
     var selectElement = document.getElementById(i);
     selectedOptions[i] = selectElement.selectedOptions[0].innerText;
     if (menuOptions[i][selectedOptions[i]]) { // Unset if default
       localStorage.removeItem(i);
-    }else{ // Set if not default
+    } else { // Set if not default
       localStorage.setItem(i, selectedOptions[i]);
     }
   }
   settingsApply();
 }
 
-function settingsApply() {
+function settingsApply () {
   switch (selectedOptions['theme']) {
     case 'dark':
       cssDark.media.mediaText  = cssAlwaysMedia;
@@ -174,7 +176,7 @@ function settingsApply() {
       document.body.style.maxWidth='';
   }
   document.body.style.fontFamily=selectedOptions['font-family'];
-  newTarget = document.getElementById('fileToRender');
+  var newTarget = document.getElementById('fileToRender');
   if (newTarget && newTarget.value != fileToRender){
     fileToRender = newTarget.value;
     oReq.open('GET', fileToRender);
@@ -182,7 +184,7 @@ function settingsApply() {
   }
 }
 
-function main() {
+function main () {
   toggleMenu();
   settingsApply();
   oReq = new XMLHttpRequest();
