@@ -1,8 +1,10 @@
 # INDEX.md
 A boilerplate `.html` file that renders your `README.md`
 
-## Demo
-[https://vsharapov.github.io/INDEXmd/](https://vsharapov.github.io/INDEXmd/)
+## [Demo][0]
+[https://vsharapov.github.io/INDEXmd/][0]
+
+[0]: https://vsharapov.github.io/INDEXmd/
 
 ## How to add this to your repo:
 
