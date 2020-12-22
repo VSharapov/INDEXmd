@@ -173,10 +173,14 @@ function settingsApply () {
   }
   switch (selectedOptions['text-width']) {
     case 'readable':
-      document.body.style.maxWidth = '70ch';
+      document.body.style.maxWidth   = '70ch';
+      document.body.style.margin     = 'auto';
+      document.body.style.fontSize   = '131.25%';
       break;
     default:
-      document.body.style.maxWidth = '';
+      document.body.style.maxWidth   = '';
+      document.body.style.margin     = '';
+      document.body.style.fontSize   = '';
   }
   document.body.style.fontFamily = selectedOptions['font-family'];
   var newTarget = document.getElementById('fileToRender');
