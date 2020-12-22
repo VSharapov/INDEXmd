@@ -1,5 +1,5 @@
 # INDEX.md
-A boilerplate `.html` file that renders your README
+A boilerplate `.html` file that renders your `README.md`
 
 ## Demo
 [https://vsharapov.github.io/INDEXmd/](https://vsharapov.github.io/INDEXmd/)
