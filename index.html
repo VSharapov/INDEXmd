@@ -3,7 +3,7 @@
   <head>
     <title></title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <link rel="icon" href=''>
+    <link rel="icon" href="">
     <style type="text/css">
       code, pre {
         background-color: #6666;
@@ -27,152 +27,176 @@
     </style>
     <script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.1/dist/showdown.min.js"></script>
     <script>
-      var getParams = {};
-      getPairs = location.search.substr(1).split("&");
-      for (i in getPairs) {
-        getParams[getPairs[i].split("=")[0]] = getPairs[i].split("=")[1];
-      }
+var fileToRender = 'README.md';
+var getParams = {};
+const converter = new showdown.Converter();
+var html = '';
+var oreq;
 
-      targetMD = 'README.md';
-      if ('target.md' in getParams){
-        targetMD = getParams['target.md'];
-      }
-      converter = new showdown.Converter();
-      html = converter.makeHtml('loading ``' + targetMD + '`` ...');
+const cssAlwaysMedia = document.styleSheets[0].media.mediaText;
+const cssLightMedia  = document.styleSheets[1].media.mediaText;
+const cssDarkMedia   = document.styleSheets[2].media.mediaText;
+const cssNeverMedia  = document.styleSheets[3].media.mediaText;
+var cssLight = document.styleSheets[1];
+var cssDark  = document.styleSheets[2];
 
-      function makeFaviconText(textIn) {
-        document.querySelector("link[rel~='icon']").href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text paint-order="stroke" stroke="white" stroke-width="16" fill="black" font-stretch="ultra-condensed" font-family="mono" y=".9em" font-size="90">' + textIn + '</text></svg>';
-      }
-      makeFaviconText('⏳');
+const menuOptions = {'theme': {
+  'auto': true,
+  'dark': false,
+  'light': false
+}, 'text-width': {
+  'full-width': true,
+  'readable': false
+}, 'font-family': {
+  'serif': false,
+  'sans-serif': true,
+  'monospace': false
+}};
+var selectedOptions = {};
 
-      function reqListener () {
-        document.getElementById('readme').innerHTML = converter.makeHtml(this.responseText);
-        document.title = document.getElementById('readme').children[0].innerText;
-        makeFaviconText(document.title);
-        if ((this.status < 200 || this.status > 300) && this.status != 304) {
-          document.getElementById('readme').innerHTML = converter.makeHtml("Status " + this.status);
-          document.title = this.status;
-          makeFaviconText('❌');
-          console.log(this);
-        }
-        if(location.href.split('#').length > 1){location.href=location.href}
-      }
+function init () {
+  // GET parameters
+  var getPairs = location.search.substr(1).split('&');
+  for (var i in getPairs) {
+    getParams[getPairs[i].split('=')[0]] = getPairs[i].split('=')[1];
+  }
 
-      cssAlwaysMedia = document.styleSheets[0].media.mediaText;
-      cssLightMedia  = document.styleSheets[1].media.mediaText;
-      cssDarkMedia   = document.styleSheets[2].media.mediaText;
-      cssNeverMedia  = document.styleSheets[3].media.mediaText;
-      cssLight = document.styleSheets[1];
-      cssDark  = document.styleSheets[2];
+  // Options
+  for (var i in menuOptions) {
+    for (var j in menuOptions[i]) {
+      if (menuOptions[i][j]) {
+        // Default...
+        selectedOptions[i] = j;
+      }
+    }
+  }
+  for (var i in menuOptions) {
+    if (localStorage.getItem(i) in menuOptions[i]) {
+      // ...overridden by localStorage...
+      selectedOptions[i] = localStorage.getItem(i);
+    }
+  }
+  for (var i in menuOptions) {
+    if (getParams[i] in menuOptions[i]) {
+      // ...overriden by GET parameters
+      selectedOptions[i] = getParams[i];
+    }
+  }
 
-      menuOptions = {'theme': {
-        'auto': true,
-        'dark': false,
-        'light': false,
-      }, 'text-width': {
-        'full-width': true,
-        'readable': false,
-      }, 'font-family': {
-        'serif': false,
-        'sans-serif': true,
-        'monospace': false,
-      }};
-      var selectedOptions = {};
-      // Defaults...
-      for (i in menuOptions) {
-        for (j in menuOptions[i]) {
-          if (menuOptions[i][j]) {
-            selectedOptions[i] = j;
-          }
-        }
-      }
-      // ...first overriden by localStorage...
-      for (i in menuOptions) {
-        if (localStorage.getItem(i) in menuOptions[i]) {
-          selectedOptions[i] = localStorage.getItem(i);
-        }
-      }
-      // ...then overriden by GET parameters
-      for (i in menuOptions) {
-        if (getParams[i] in menuOptions[i]) {
-          selectedOptions[i] = getParams[i];
-        }
-      }
+  if ('fileToRender' in getParams){
+    fileToRender = getParams.fileToRender;
+  }
 
-      function toggleMenu () {
-        miniMenuHTML = '<button style="float:right;" onclick="toggleMenu()">☰</button>';
-        var mDiv = document.getElementById('indexmdmenu');
-        if (mDiv.innerHTML == miniMenuHTML) {
-          bigMenuHTML = miniMenuHTML;
-          for (i in menuOptions){
-            bigMenuHTML += '<select id="' + i + '"' + (i == Object.keys(menuOptions)[0] ? '' : ' style="width: 100%;"') + '>';
-            for (j in menuOptions[i]) {
-              bigMenuHTML += '<option value="' + j + '"' + (selectedOptions[i] == [j] ? ' selected' : '') + '>' + j + '</option>';
-            }
-            bigMenuHTML += '</select><br />';
-          }
-          bigMenuHTML += '<input type="text" size=8 id="target.md" style="box-sizing: border-box; width:100%;" value="' + targetMD + '"><br />'
-          mDiv.innerHTML = bigMenuHTML;
-        }else{
-          mDiv.innerHTML = miniMenuHTML;
-        }
-      }
+  // Loading...
+  html = converter.makeHtml('loading ``' + fileToRender + '`` ...');
+  makeFaviconText('⏳');
+}
+init();
 
-      function menuEffect() {
-        for(i in menuOptions){
-          selectedOptions[i] = document.getElementById(i).selectedOptions[0].innerText;
-          if (menuOptions[i][selectedOptions[i]]) { // Unset if default
-            localStorage.removeItem(i);
-          }else{ // Set if not default
-            localStorage.setItem(i, selectedOptions[i]);
-          }
-        }
-        settingsApply();
-      }
+function makeFaviconText (textIn) {
+  var svg = 'data:image/svg+xml,' +
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
+    '<text paint-order="stroke" stroke="white" stroke-width="16" ' +
+    'fill="black" font-stretch="ultra-condensed" font-family="mono" ' +
+    'y=".9em" font-size="90">' + textIn + '</text></svg>';
+  document.querySelector('link[rel~="icon"]').href=svg;
+}
 
-      function settingsApply() {
-        switch (selectedOptions['theme']) {
-          case 'dark':
-            cssDark.media.mediaText  = cssAlwaysMedia;
-            cssLight.media.mediaText = cssNeverMedia;
-            break;
-          case 'light':
-            cssDark.media.mediaText  = cssNeverMedia;
-            cssLight.media.mediaText = cssAlwaysMedia;
-            break;
-          default:
-            cssDark.media.mediaText  = cssDarkMedia;
-            cssLight.media.mediaText = cssLightMedia;
-        }
-        switch (selectedOptions['text-width']) {
-          case 'readable':
-            document.body.style.maxWidth="70ch";
-            break;
-          default:
-            document.body.style.maxWidth="";
-        }
-        document.body.style.fontFamily=selectedOptions['font-family'];
-        newTarget = document.getElementById('target.md');
-        if (newTarget && newTarget.value != targetMD){
-          targetMD = newTarget.value;
-          oReq.open("GET", targetMD);
-          oReq.send();
-        }
-      }
+function reqListener () {
+  var renderedMarkdown = document.getElementById('renderedMarkdown');
+  renderedMarkdown.innerHTML = converter.makeHtml(this.responseText);
+  document.title = renderedMarkdown.children[0].innerText;
+  makeFaviconText(document.title);
+  if ((this.status < 200 || this.status > 300) && this.status != 304) {
+    renderedMarkdown.innerHTML = converter.makeHtml('Status ' + this.status);
+    document.title = this.status;
+    makeFaviconText('❌');
+    console.log(this);
+  }
+  if (location.href.split('#').length > 1) {location.href = location.href;}
+}
 
-      function main() {
-        toggleMenu();
-        settingsApply();
-        oReq = new XMLHttpRequest();
-        oReq.addEventListener("load", reqListener);
-        oReq.open("GET", targetMD);
-        oReq.send();
+function toggleMenu () {
+  var miniMenu = '<button style="float:right;" onclick="toggleMenu()">' + '☰' +
+    '</button>';
+  var bigMenu = miniMenu;
+  var mDiv = document.getElementById('indexmdmenu');
+  if (mDiv.innerHTML == miniMenu) {
+    for (var i in menuOptions){
+      bigMenu += '<select id="' + i + '"' +
+        (i == Object.keys(menuOptions)[0] ? '' : ' style="width:100%;"') + '>';
+      for (var j in menuOptions[i]) {
+        bigMenu += '<option value="' + j + '"' +
+          (selectedOptions[i] == [j] ? ' selected' : '') +
+          '>' + j + '</option>';
       }
+      bigMenu += '</select><br />';
+    }
+    bigMenu += '<input type="text" size=8 id="fileToRender" ' +
+      'style="box-sizing:border-box; width:100%;" value="' +
+      fileToRender + '"><br />';
+    mDiv.innerHTML = bigMenu;
+  } else {
+    mDiv.innerHTML = miniMenu;
+  }
+}
+
+function menuEffect () {
+  for (var i in menuOptions){
+    var selectElement = document.getElementById(i);
+    selectedOptions[i] = selectElement.selectedOptions[0].innerText;
+    if (menuOptions[i][selectedOptions[i]]) { // Unset if default
+      localStorage.removeItem(i);
+    } else { // Set if not default
+      localStorage.setItem(i, selectedOptions[i]);
+    }
+  }
+  settingsApply();
+}
+
+function settingsApply () {
+  switch (selectedOptions['theme']) {
+    case 'dark':
+      cssDark.media.mediaText  = cssAlwaysMedia;
+      cssLight.media.mediaText = cssNeverMedia;
+      break;
+    case 'light':
+      cssDark.media.mediaText  = cssNeverMedia;
+      cssLight.media.mediaText = cssAlwaysMedia;
+      break;
+    default:
+      cssDark.media.mediaText  = cssDarkMedia;
+      cssLight.media.mediaText = cssLightMedia;
+  }
+  switch (selectedOptions['text-width']) {
+    case 'readable':
+      document.body.style.maxWidth='70ch';
+      break;
+    default:
+      document.body.style.maxWidth='';
+  }
+  document.body.style.fontFamily=selectedOptions['font-family'];
+  var newTarget = document.getElementById('fileToRender');
+  if (newTarget && newTarget.value != fileToRender){
+    fileToRender = newTarget.value;
+    oReq.open('GET', fileToRender);
+    oReq.send();
+  }
+}
+
+function main () {
+  toggleMenu();
+  settingsApply();
+  oReq = new XMLHttpRequest();
+  oReq.addEventListener('load', reqListener);
+  oReq.open('GET', fileToRender);
+  oReq.send();
+}
     </script>
 	</head>
   <body onload="main()">
-    <div id="indexmdmenu" style="float:right; max-width: 30vw; border: dotted" onchange="menuEffect()"></div>
-    <div id="readme"></div>
+    <div id="indexmdmenu" style="float:right; max-width:30vw; border:dotted" onchange="menuEffect()"></div>
+    <div id="renderedMarkdown"></div>
 	</body>
 </html>
 
