@@ -8,6 +8,17 @@ A boilerplate `.html` file that renders your README
 
 Just save [this `.html` file](https://raw.githubusercontent.com/VSharapov/INDEXmd/master/index.html) to your repo's directory
 
+Stuff you might wanna mess with:
+
+- `targetMD = 'README.md';`
+- `menuOptions` defaults can be changed
+    - `readable` is hardcoded to `...maxWidth="70ch";`
+- Markdown parser options
+    - Before `new showdown.Converter();` e.g. `showdown.setOption('tables', true);`
+    - See defaults (and all options) with `console.log(showdown.getOptions());`
+
+---
+
 ---
 
 This a test of all markdown possibilities:
