@@ -46,18 +46,16 @@
       makeFaviconText('⏳');
 
       function reqListener () {
-        if ((this.status >= 200 && this.status < 300) || this.status == 304)  {
-          html = converter.makeHtml(this.responseText);
-          makeFaviconText(document.title);
-        }else{
-          html += "Status " + this.status;
+        document.getElementById('readme').innerHTML = converter.makeHtml(this.responseText);
+        document.title = document.getElementById('readme').children[0].innerText;
+        makeFaviconText(document.title);
+        if ((this.status < 200 || this.status > 300) && this.status != 304) {
+          document.getElementById('readme').innerHTML = converter.makeHtml("Status " + this.status);
+          document.title = this.status;
           makeFaviconText('❌');
           console.log(this);
         }
-        document.getElementById('readme').innerHTML = html;
-        document.title = document.getElementById('readme').children[0].innerText;
         if(location.href.split('#').length > 1){location.href=location.href}
-
       }
 
       cssAlwaysMedia = document.styleSheets[0].media.mediaText;
