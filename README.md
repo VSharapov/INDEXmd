@@ -10,7 +10,7 @@ Just save [this `.html` file](https://raw.githubusercontent.com/VSharapov/INDEXm
 
 Stuff you might wanna mess with:
 
-- `targetMD = 'README.md';`
+- `fileToRender = 'README.md';`
 - `menuOptions` defaults can be changed
     - `readable` is hardcoded to `...maxWidth="70ch";`
 - Markdown parser options
