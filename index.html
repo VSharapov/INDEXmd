@@ -27,9 +27,18 @@
     </style>
     <script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.1/dist/showdown.min.js"></script>
     <script>
-      readme = 'README.md'
+      var getParams = {};
+      getPairs = location.search.substr(1).split("&");
+      for (i in getPairs) {
+        getParams[getPairs[i].split("=")[0]] = getPairs[i].split("=")[1];
+      }
+
+      targetMD = 'README.md';
+      if ('target.md' in getParams){
+        targetMD = getParams['target.md'];
+      }
       converter = new showdown.Converter();
-      html = converter.makeHtml('loading ``' + readme + '`` ...');
+      html = converter.makeHtml('loading ``' + targetMD + '`` ...');
 
       function makeFaviconText(textIn) {
         document.querySelector("link[rel~='icon']").href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text paint-order="stroke" stroke="white" stroke-width="16" fill="currentColor" font-stretch="ultra-condensed" font-family="mono" y=".9em" font-size="90">' + textIn + '</text></svg>';
@@ -85,11 +94,6 @@
         }
       }
       // ...then overriden by GET parameters
-      var getParams = {};
-      getPairs = location.search.substr(1).split("&");
-      for (i in getPairs) {
-        getParams[getPairs[i].split("=")[0]] = getPairs[i].split("=")[1];
-      }
       for (i in menuOptions) {
         if (getParams[i] in menuOptions[i]) {
           selectedOptions[i] = getParams[i];
@@ -108,6 +112,7 @@
             }
             bigMenuHTML += '</select><br />';
           }
+          bigMenuHTML += '<input type="text" id="target.md" value="' + targetMD + '"><br />'
           mDiv.innerHTML = bigMenuHTML;
         }else{
           mDiv.innerHTML = miniMenuHTML;
@@ -148,6 +153,12 @@
             document.body.style.maxWidth="";
         }
         document.body.style.fontFamily=selectedOptions['font-family'];
+        newTarget = document.getElementById('target.md');
+        if (newTarget && newTarget.value != targetMD){
+          targetMD = newTarget.value;
+          oReq.open("GET", targetMD);
+          oReq.send();
+        }
       }
 
       function main() {
@@ -155,7 +166,7 @@
         settingsApply();
         oReq = new XMLHttpRequest();
         oReq.addEventListener("load", reqListener);
-        oReq.open("GET", readme);
+        oReq.open("GET", targetMD);
         oReq.send();
       }
     </script>
