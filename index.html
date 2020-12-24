@@ -30,6 +30,7 @@
 var fileToRender = 'README.md';
 var getParams    = {};
 const converter  = new showdown.Converter();
+var textToParse  = '';
 var html         = '';
 var oreq;
 
@@ -107,19 +108,29 @@ function makeFaviconText (textIn) {
   document.querySelector('link[rel~="icon"]').href = svg;
 }
 
-function reqListener () {
+function updateContent () {
   var renderedMarkdown = document.getElementById('renderedMarkdown');
-  renderedMarkdown.innerHTML = converter.makeHtml(this.responseText);
+  var rawContent = '<pre>' + textToParse + '</pre>';
+  var mdContent = converter.makeHtml(textToParse);
+  renderedMarkdown.innerHTML = mdContent;
   document.title = renderedMarkdown.children[0].innerText;
+  if (selectedOptions['parse'] == 'raw') {
+    renderedMarkdown.innerHTML = rawContent;
+  }
   makeFaviconText(document.title);
+  // Scroll to #frament - remember, the content wasn't there onload
+  if (location.href.split('#').length > 1) {location.href = location.href;}
+}
+
+function reqListener () {
+  textToParse = this.responseText;
+  updateContent();
   if ((this.status < 200 || this.status > 300) && this.status != 304) {
     renderedMarkdown.innerHTML = converter.makeHtml('Status ' + this.status);
     document.title = this.status;
     makeFaviconText('❌');
     console.log(this);
   }
-  // Scroll to #frament - remember, the content wasn't there onload
-  if (location.href.split('#').length > 1) {location.href = location.href;}
 }
 
 function toggleMenu () {
