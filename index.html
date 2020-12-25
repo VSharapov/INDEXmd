@@ -197,6 +197,7 @@ function settingsApply () {
       document.body.style.fontSize   = '';
   }
   document.body.style.fontFamily = selectedOptions['font-family'];
+  if (textToParse != '') {updateContent();}
   var newTarget = document.getElementById('fileToRender');
   if (newTarget && newTarget.value != fileToRender){
     fileToRender = newTarget.value;
