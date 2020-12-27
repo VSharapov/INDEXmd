@@ -29,6 +29,7 @@
     <script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.1/dist/showdown.min.js"></script>
     <script>
 var fileToRender = 'README.md';
+var defaultFile  = fileToRender;
 var getParams    = {};
 const converter  = new showdown.Converter();
 var textToParse  = '';
@@ -206,6 +207,20 @@ function settingsApply () {
     oReq.open('GET', fileToRender);
     oReq.send();
   }
+  // Make address bar reflect non-default settings
+  var newGetParameters = '';
+  for (var k in selectedOptions) {
+    if (!menuOptions[k][selectedOptions[k]]) {
+      newGetParameters += '&' + k + '=' + selectedOptions[k];
+    }
+  }
+  if (fileToRender != defaultFile) {
+    newGetParameters += '&fileToRender=' + fileToRender;
+  }
+  if (newGetParameters != '') {
+    newGetParameters = '?' + newGetParameters.substr(1);
+  }
+  window.history.replaceState({}, '', location.pathname + newGetParameters);
 }
 
 function main () {
