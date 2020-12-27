@@ -110,13 +110,13 @@ function makeFaviconText (textIn) {
 }
 
 function updateContent () {
-  var renderedMarkdown = document.getElementById('renderedMarkdown');
+  var parsed = document.getElementById('parsed');
   var rawContent = '<pre>' + textToParse + '</pre>';
   var mdContent = converter.makeHtml(textToParse);
-  renderedMarkdown.innerHTML = mdContent;
-  document.title = renderedMarkdown.children[0].innerText;
+  parsed.innerHTML = mdContent;
+  document.title = parsed.children[0].innerText;
   if (selectedOptions['parse'] == 'raw') {
-    renderedMarkdown.innerHTML = rawContent;
+    parsed.innerHTML = rawContent;
   }
   makeFaviconText(document.title);
   // Scroll to #frament - remember, the content wasn't there onload
@@ -124,10 +124,11 @@ function updateContent () {
 }
 
 function reqListener () {
+  var parsed = document.getElementById('parsed');
   textToParse = this.responseText;
   updateContent();
   if ((this.status < 200 || this.status > 300) && this.status != 304) {
-    renderedMarkdown.innerHTML = converter.makeHtml('Status ' + this.status);
+    parsed.innerHTML = converter.makeHtml('Status ' + this.status);
     document.title = this.status;
     makeFaviconText('❌');
     console.log(this);
@@ -219,7 +220,7 @@ function main () {
 	</head>
   <body onload="main()">
     <div id="indexmdmenu" style="float:right; max-width:30vw; border:dotted" onchange="menuEffect()"></div>
-    <div id="renderedMarkdown"></div>
+    <div id="parsed"></div>
 	</body>
 </html>
 
