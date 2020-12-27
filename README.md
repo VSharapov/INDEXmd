@@ -13,6 +13,7 @@ Just save [this `.html` file](https://raw.githubusercontent.com/VSharapov/INDEXm
 Stuff you might wanna mess with:
 
 - `fileToRender = 'README.md';`
+- `display:none` in the `style` of the `indexmdmenu` will hide it
 - `menuOptions` defaults can be changed
     - `readable` is hardcoded to `...maxWidth = "70ch";`
 - The icon is just the `makeFaviconText(document.title);` truncated (~2 letters)
