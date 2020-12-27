@@ -2,9 +2,9 @@
 A boilerplate `.html` file that renders your `README.md`
 
 ## [Demo][0]
-[https://vsharapov.github.io/INDEXmd/][0]
+[https://vsharapov.github.io/INDEXmd/?text-width=readable][0]
 
-[0]: https://vsharapov.github.io/INDEXmd/
+[0]: https://vsharapov.github.io/INDEXmd/?text-width=readable
 
 ## How to add this to your repo:
 
