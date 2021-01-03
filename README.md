@@ -17,7 +17,7 @@ Stuff you might wanna mess with:
 - `menuOptions` defaults can be changed
     - `readable` is hardcoded to `...maxWidth = "70ch";`
 - The icon is just the `makeFaviconText(document.title);` truncated (~2 letters)
-    - Replace `document.title` with something `🅱`etter like `竜` or `🆒`
+    - Instead of `document.title` hardcode something `🅱`etter like `竜` or `🆒`
     - Fit more characters by changing `font-family="mono"` etc… in the svg
 - Markdown parser options
     - Before `new showdown.Converter();` e.g. `showdown.setOption('tables', true);`
