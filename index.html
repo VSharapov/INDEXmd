@@ -221,7 +221,7 @@ function settingsApply () {
   if (newGetParameters != '') {
     newGetParameters = '?' + newGetParameters.substr(1);
   }
-  window.history.replaceState({}, '', location.pathname + newGetParameters);
+  window.history.replaceState({}, '', location.pathname + newGetParameters + location.hash);
 }
 
 function main () {
