@@ -123,6 +123,7 @@ This is [an example](http://example.com/ "Title") inline link.
 
 ![Alt text][3]
 ![Alt text][4]
+<img src="https://dummyimage.com/13x7/f/0.png&text=png" alt="External via inline HTML" />
 
 Like links, Images also have a footnote style syntax
 
